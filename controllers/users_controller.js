@@ -17,3 +17,13 @@ module.exports.signIn = function (req, res) {
     title: "Codeial || Sign In",
   });
 };
+
+//Get Sign Up Data
+module.exports.create = function (req, res) {
+  //To Do Later
+};
+
+//Sign In And Create A Session
+module.exports.createSession = function (req, res) {
+  //To Do Later
+};
