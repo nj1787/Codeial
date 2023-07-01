@@ -16,11 +16,18 @@ module.exports.home = function (req, res) {
   //Populate User of each post
   Post.find({})
     .populate("user")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "user",
+      },
+    })
     .exec()
-    .then((posts) => {
+    .then((posts, comments) => {
       return res.render("home", {
         title: "Codeial | Home",
         posts,
+        comments,
       });
     });
 };
