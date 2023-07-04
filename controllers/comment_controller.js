@@ -21,3 +21,27 @@ module.exports.create = function (req, res) {
     }
   });
 };
+
+module.exports.destroy = function (req, res) {
+  Comment.findById(req.params.id)
+    .then((comment) => {
+      if (comment.user == req.user.id) {
+        let postId = comment.post;
+
+        comment.deleteOne();
+
+        Post.findByIdAndUpdate(postId, { $pull: { comments: req.params.id } })
+          .then((post) => {
+            return res.redirect("back");
+          })
+          .catch((err) => {
+            console.log(`Error Occured While Deleting Comment : ${err}`);
+          });
+      } else {
+        return res.redirect("back");
+      }
+    })
+    .catch((err) => {
+      console.log(`Some Error Occured : ${err}`);
+    });
+};
