@@ -12,6 +12,8 @@ router.get(
   usersController.profile
 );
 
+router.post("/update/:id", usersController.update);
+
 router.get("/signin", usersController.signIn);
 
 router.get("/signup", usersController.signUp);

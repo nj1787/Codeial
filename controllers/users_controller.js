@@ -13,6 +13,21 @@ module.exports.profile = function (req, res) {
     });
 };
 
+module.exports.update = function (req, res) {
+  if (req.params.id == req.user.id) {
+    User.findByIdAndUpdate(req.params.id, req.body)
+      .then((user) => {
+        return res.redirect("back");
+      })
+      .catch((err) => {
+        console.log("Some Error Occured", err);
+        return;
+      });
+  } else {
+    return res.status(401).send("Unauthorized");
+  }
+};
+
 //Render Sign Up Page
 module.exports.signUp = function (req, res) {
   if (req.isAuthenticated()) {
