@@ -1,42 +1,70 @@
 const Post = require("../models/post");
 const User = require("../models/user");
 
-module.exports.home = function (req, res) {
-  // console.log(req.cookies);
-  // res.cookie("user_id", 25);
+//Using Async-Await
 
-  //Only Populate The Post
-
-  // Post.find({}).then((posts) => {
-  //   return res.render("home", {
-  //     title: "Codeial | Home",
-  //     posts,
-  //   });
-  // });
-
-  //Populate User of each post
-  Post.find({})
-    .populate("user")
-    .populate({
-      path: "comments",
-      populate: {
-        path: "user",
-      },
-    })
-    .exec()
-    .then((posts, comments) => {
-      User.find({}).then((users) => {
-        return res.render("home", {
-          title: "Codeial | Home",
-          posts,
-          comments,
-          all_users: users,
-        });
+module.exports.home = async function (req, res) {
+  //Populate Post Of Each User
+  try {
+    let posts = await Post.find({})
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+        },
       });
-    })
-    .catch((err) => {
-      console.log("Some Error Occured..", err);
+    let users = await User.find({});
+
+    return res.render("home", {
+      title: "Codeial || Home",
+      posts,
+      all_users: users,
     });
+  } catch (err) {
+    console.log("Some error Occured", err);
+    return;
+  }
 };
+
+/*******************Leagacy Code************************/
+
+// module.exports.home = function (req, res) {
+//   // console.log(req.cookies);
+//   // res.cookie("user_id", 25);
+
+//   //Only Populate The Post
+
+//   // Post.find({}).then((posts) => {
+//   //   return res.render("home", {
+//   //     title: "Codeial | Home",
+//   //     posts,
+//   //   });
+//   // });
+
+//   //Populate User of each post
+//   Post.find({})
+//     .populate("user")
+//     .populate({
+//       path: "comments",
+//       populate: {
+//         path: "user",
+//       },
+//     })
+//     .exec()
+//     .then((posts, comments) => {
+//       User.find({}).then((users) => {
+//         return res.render("home", {
+//           title: "Codeial | Home",
+//           posts,
+//           comments,
+//           all_users: users,
+//         });
+//       });
+//     })
+//     .catch((err) => {
+//       console.log("Some Error Occured..", err);
+//     });
+// };
 
 //module.exports.actionName = function (req, res) {}
