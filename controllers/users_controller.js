@@ -95,12 +95,14 @@ module.exports.create = function (req, res) {
 
 //Sign In And Create A Session
 module.exports.createSession = function (req, res) {
+  req.flash("success", "Logged In Successfully");
   return res.redirect("/");
 };
 
 module.exports.destroySession = function (req, res, next) {
   req.logout((err) => {
-    return next(err);
+    next(err);
   });
-  return res.redirect("/");
+  req.flash("success", "Logged Out Successfully");
+  res.redirect("/");
 };
