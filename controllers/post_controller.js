@@ -10,9 +10,11 @@ module.exports.create = async function (req, res) {
       user: req.user._id,
     });
 
+    req.flash("success", "Post Published!");
     return res.redirect("back");
   } catch (err) {
-    console.log("Some Error Occured", err);
+    req.flash("error", err);
+    // console.log("Some Error Occured", err);
     return;
   }
 };
@@ -25,12 +27,17 @@ module.exports.destroy = async function (req, res) {
       post.deleteOne();
 
       await Comment.deleteMany({ post: req.params.id });
+
+      req.flash("success", "Post and Associated Comments Deleted!");
+
       return res.redirect("back");
     } else {
+      req.flash("error", "You Cannot Delete This Post!");
       return res.redirect("back");
     }
   } catch (err) {
-    console.log("Some error occured", err);
+    req.flash("error", err);
+    // console.log("Some error occured", err);
   }
 };
 
