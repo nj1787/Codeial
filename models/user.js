@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const multer = require("multer");
 const path = require("path");
-const AVATAR_PATH = path.join("/uploads/users/avatars");
+const AVATAR_PATH = path.join("/uploads/users");
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+//File Upload - Multer
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "..", AVATAR_PATH));
