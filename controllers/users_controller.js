@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const fs = require("fs");
 const path = require("path");
+const util = require("util");
+const redirectPromise = util.promisify(require("express").response.redirect);
 
 module.exports.profile = function (req, res) {
   User.findById(req.params.id)
@@ -142,15 +144,25 @@ module.exports.create = function (req, res) {
 };
 
 //Sign In And Create A Session
-module.exports.createSession = function (req, res) {
-  req.flash("success", "Logged In Successfully");
-  return res.redirect("/");
+module.exports.createSession = (req, res) => {
+  req.flash('success', 'Logged In Successfully');
+  return res.redirect('/');
 };
 
-module.exports.destroySession = function (req, res, next) {
+module.exports.destroySession = (req, res) => {
   req.logout((err) => {
-    next(err);
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "You have logged out!");
+    return res.redirect("/");
   });
-  req.flash("success", "Logged Out Successfully");
-  res.redirect("/");
 };
+
+// module.exports.destroySession = function (req, res, next) {
+//   req.logout((err) => {
+//     return next(err);
+//   });
+//   req.flash("success", "Logged Out Successfully");
+//   return res.redirect("/");
+// };

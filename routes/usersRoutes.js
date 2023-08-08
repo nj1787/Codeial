@@ -12,7 +12,11 @@ router.get(
   usersController.profile
 );
 
-router.post("/update/:id", usersController.update);
+router.post(
+  "/update/:id",
+  passport.checkAuthentication,
+  usersController.update
+);
 
 router.get("/signin", usersController.signIn);
 
@@ -28,5 +32,19 @@ router.post(
 );
 
 router.get("/signout", usersController.destroySession);
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+//This is the URL at which I will Get The Data
+router.get(
+  "/auth/google/callback",
+  passport.authenticate(
+    "google",
+    { failureRedirect: "/users/signin" },
+    usersController.createSession
+  )
+);
 
 module.exports = router;
