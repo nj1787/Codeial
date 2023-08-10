@@ -19,7 +19,7 @@ exports.newComment = (comment) => {
         console.log("Error while sending mail ", err);
         return;
       }
-      console.log("Message Sent", info);
+      // console.log("Message Sent", info);
       return;
     }
   );
