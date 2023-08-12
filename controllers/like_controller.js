@@ -8,6 +8,8 @@ module.exports.toggleLike = async function (req, res) {
     let likeable;
     let deleted = false;
 
+    console.log("ABCD", req.query);
+
     if (req.query.type == "Post") {
       likeable = await Post.findById(req.query.id).populate("likes");
     } else {
@@ -20,13 +22,13 @@ module.exports.toggleLike = async function (req, res) {
       onModel: req.query.type,
       user: req.user._id,
     });
-
+    console.log(likeable);
     // if a like already exists, delete it
     if (existingLike) {
       likeable.likes.pull(existingLike._id);
       likeable.save();
 
-      existingLike.remove();
+      await Like.findByIdAndDelete(existingLike._id);
 
       deleted = true;
     } else {
@@ -37,7 +39,7 @@ module.exports.toggleLike = async function (req, res) {
         onModel: req.query.type,
       });
 
-      likeable.likes.push(like._id);
+      likeable.likes.push(newLike._id);
       likeable.save();
     }
 
@@ -48,6 +50,7 @@ module.exports.toggleLike = async function (req, res) {
       },
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       message: "Internal Server Error",
     });
